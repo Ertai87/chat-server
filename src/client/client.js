@@ -3,7 +3,7 @@ $(function(){
         alert($("#input").val());
         $.ajax({
             type: "POST",
-            url: "http://localhost:8080/receiveMessage",
+            url: "/tomcat/receiveMessage",
             data: JSON.stringify({
                 username: "user1",
                 message: $("#input").val()
