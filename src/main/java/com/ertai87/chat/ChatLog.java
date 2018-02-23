@@ -6,9 +6,9 @@ import lombok.Getter;
 import java.util.LinkedList;
 import java.util.List;
 
+@Getter
 public class ChatLog {
 
-    @Getter
     private List<ChatEntry> entries;
 
     public ChatLog(){

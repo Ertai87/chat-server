@@ -9,7 +9,6 @@ import java.util.List;
 @Configuration
 public class SpringConfiguration {
 
-
     @Bean
     public ChatLog chatLog(){
         return new ChatLog();
