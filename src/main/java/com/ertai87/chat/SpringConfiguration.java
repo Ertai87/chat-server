@@ -3,14 +3,18 @@ package com.ertai87.chat;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @Configuration
 public class SpringConfiguration {
 
     @Bean
-    public ChatLog chatLog(){
-        return new ChatLog();
+    public Map<String, Queue<ChatEntry>> messageQueueMap(){
+        return new HashMap<>();
+    }
+
+    @Bean
+    public Map<String, Boolean> messageQueueLocks(){
+        return new HashMap<>();
     }
 }

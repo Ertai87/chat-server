@@ -6,6 +6,6 @@ import lombok.Data;
 @AllArgsConstructor
 @Data
 class ChatEntry{
-    String username;
-    String message;
+    private String username;
+    private String message;
 }
