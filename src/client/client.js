@@ -16,7 +16,6 @@ $(function(){
     };
 
     var username = getUrlParameter("username");
-    alert(username);
 
     $.ajax({
         type: "POST",
@@ -25,11 +24,25 @@ $(function(){
         dataType: "json",
         error: function(xhr, status, error) {
           alert("ERROR: " + JSON.parse(xhr.responseText).message);
+        },
+        success: function(data, status){
+            $.ajax({
+                type: "GET",
+                url: "/tomcat/getNewMessages/" + username,
+                error: function(xhr, status, error) {
+                  alert("ERROR: " + JSON.parse(xhr.responseText).message);
+                },
+                success: function(data, status){
+                    for(i = 0; i < data.length; i++){
+                        $("#chatWindow").val($("#chatWindow").val() +
+                            "\n" + data[i].username + ": " + data[i].message);
+                    }
+                }
+            });
         }
     });
 
     $("#submit").click(function() {
-        alert("User: " + username + "\nMessage: " + $("#input").val());
         $.ajax({
             type: "POST",
             url: "/tomcat/postMessage",
@@ -43,19 +56,42 @@ $(function(){
                 xhr.setRequestHeader("Content-Type", "application/json");
             },
             dataType: "json",
+            error: function(xhr, status, error) {
+                alert("ERROR: " + JSON.parse(xhr.responseText).message);
+            },
             success: function(data, status){
                 $.ajax({
                     type: "GET",
                     url: "/tomcat/getNewMessages/" + username,
                     error: function(xhr, status, error) {
                       alert("ERROR: " + JSON.parse(xhr.responseText).message);
+                    },
+                    success: function(data, status){
+                        for(i = 0; i < data.length; i++){
+                            $("#chatWindow").val($("#chatWindow").val() +
+                                "\n" + data[i].username + ": " + data[i].message);
+                        }
                     }
                 });
-            },
-            error: function(xhr, status, error) {
-                alert("ERROR: " + JSON.parse(xhr.responseText).message);
             }
         });
+    });
+
+    $("#logout").click(function(){
+        if(confirm("Are you sure you would like to log out?")){
+            $.ajax({
+                type: "POST",
+                url: "/tomcat/postLogout",
+                data: username,
+                dataType: "json",
+                error: function(xhr, status, error) {
+                  alert("ERROR: " + JSON.parse(xhr.responseText).message);
+                },
+                success: function(data, status){
+                    window.location.replace("/");
+                }
+            });
+        }
     });
 });
 

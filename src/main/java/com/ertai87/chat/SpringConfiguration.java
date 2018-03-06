@@ -17,4 +17,9 @@ public class SpringConfiguration {
     public Map<String, Boolean> messageQueueLocks(){
         return new HashMap<>();
     }
+
+    @Bean
+    public String serverAdminUsername(){
+        return "<SERVER ADMINISTRATOR>";
+    }
 }
