@@ -9,17 +9,17 @@ import java.util.*;
 public class SpringConfiguration {
 
     @Bean
-    public Map<String, Queue<ChatEntry>> messageQueueMap(){
+    public Map<String, Queue<ChatEntry>> data(){
         return new HashMap<>();
     }
 
     @Bean
-    public Map<String, Boolean> messageQueueLocks(){
+    public Map<String, Boolean> locks(){
         return new HashMap<>();
     }
 
     @Bean
-    public String serverAdminUsername(){
-        return "<SERVER ADMINISTRATOR>";
+    public MessageQueueMap messageQueueMap(){
+        return new MessageQueueMap();
     }
 }

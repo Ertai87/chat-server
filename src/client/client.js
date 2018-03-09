@@ -15,7 +15,12 @@ $(function(){
         }
     };
 
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
     var username = getUrlParameter("username");
+    var logout = false;
 
     $.ajax({
         type: "POST",
@@ -24,21 +29,6 @@ $(function(){
         dataType: "json",
         error: function(xhr, status, error) {
           alert("ERROR: " + JSON.parse(xhr.responseText).message);
-        },
-        success: function(data, status){
-            $.ajax({
-                type: "GET",
-                url: "/tomcat/getNewMessages/" + username,
-                error: function(xhr, status, error) {
-                  alert("ERROR: " + JSON.parse(xhr.responseText).message);
-                },
-                success: function(data, status){
-                    for(i = 0; i < data.length; i++){
-                        $("#chatWindow").val($("#chatWindow").val() +
-                            "\n" + data[i].username + ": " + data[i].message);
-                    }
-                }
-            });
         }
     });
 
@@ -60,24 +50,13 @@ $(function(){
                 alert("ERROR: " + JSON.parse(xhr.responseText).message);
             },
             success: function(data, status){
-                $.ajax({
-                    type: "GET",
-                    url: "/tomcat/getNewMessages/" + username,
-                    error: function(xhr, status, error) {
-                      alert("ERROR: " + JSON.parse(xhr.responseText).message);
-                    },
-                    success: function(data, status){
-                        for(i = 0; i < data.length; i++){
-                            $("#chatWindow").val($("#chatWindow").val() +
-                                "\n" + data[i].username + ": " + data[i].message);
-                        }
-                    }
-                });
+                $("#input").val("");
             }
         });
     });
 
     $("#logout").click(function(){
+        logout = true;
         if(confirm("Are you sure you would like to log out?")){
             $.ajax({
                 type: "POST",
@@ -91,7 +70,34 @@ $(function(){
                     window.location.replace("/");
                 }
             });
+        }else{
+            logout = false;
         }
     });
+
+    async function retrieveLoop(){
+        while(true){
+            if(logout){
+                await sleep(1000);
+                continue;
+            }
+            await sleep(1000);
+            $.ajax({
+                type: "GET",
+                url: "/tomcat/getNewMessages/" + username,
+                error: function(xhr, status, error) {
+                  alert("ERROR: " + JSON.parse(xhr.responseText).message);
+                },
+                success: function(data, status){
+                    for(i = 0; i < data.length; i++){
+                        $("#chatWindow").val($("#chatWindow").val() +
+                            "\n" + data[i].username + ": " + data[i].message);
+                    }
+                }
+            });
+        }
+    }
+
+    retrieveLoop();
 });
 
