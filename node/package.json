@@ -1,0 +1,23 @@
+{
+  "name": "lambda",
+  "version": "1.0.0",
+  "description": "Lambda functions for chat server",
+  "main": "sendMessage.js",
+  "scripts": {
+    "test": "test",
+    "zip": "zip -r lambda.zip ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/ertai87/chat-server.git"
+  },
+  "author": "Lyle Waldman",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ertai87/chat-server/issues"
+  },
+  "homepage": "https://github.com/ertai87/chat-server#readme",
+  "dependencies": {
+    "aws-sdk": "^2.660.0"
+  }
+}
