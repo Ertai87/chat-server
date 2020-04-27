@@ -20,8 +20,18 @@ resource "aws_api_gateway_integration" "send_message_integration" {
   resource_id             = aws_api_gateway_resource.send_message_publish_resource.id
   http_method             = aws_api_gateway_method.send_message_publish_method.http_method
   integration_http_method = "POST"
-  type                    = "AWS_PROXY"
+  type                    = "AWS"
   uri                     = aws_lambda_function.lambda_send_message_function.invoke_arn
+
+  request_templates = {
+    "application/json" = <<EOF
+#set($inputRoot = $input.path('$'))
+{
+  "userId" : "$input.path('userId')",
+  "message": "$input.path('message')"
+}
+EOF
+  }
 }
 
 resource "aws_lambda_permission" "send_message_apigw_lambda" {

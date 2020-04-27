@@ -20,8 +20,17 @@ resource "aws_api_gateway_integration" "create_user_integration" {
   resource_id             = aws_api_gateway_resource.create_user_publish_resource.id
   http_method             = aws_api_gateway_method.create_user_publish_method.http_method
   integration_http_method = "POST"
-  type                    = "AWS_PROXY"
+  type                    = "AWS"
   uri                     = aws_lambda_function.lambda_create_user_function.invoke_arn
+
+  request_templates = {
+    "application/json" = <<EOF
+#set($inputRoot = $input.path('$'))
+{
+  "userId" : "$input.path('userId')"
+}
+EOF
+  }
 }
 
 resource "aws_lambda_permission" "create_user_apigw_lambda" {
