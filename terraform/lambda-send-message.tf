@@ -1,7 +1,7 @@
 resource "aws_lambda_function" "lambda_send_message_function" {
   filename = "../node/lambda.zip"
   function_name = "SendMessage"
-  handler = "sendMessage.handler"
+  handler = "lambda-sendMessage.handler"
   role = aws_iam_role.lambda_send_message_execution_role.arn
   runtime = "nodejs12.x"
 }

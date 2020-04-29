@@ -3,6 +3,7 @@ const dynamodb = new AWS.DynamoDB();
 const sns = new AWS.SNS();
 const constants = require('./constants.js')
 const privateConstants = require('./privateConstants.js'); //This file is not available in Github
+const common = require('./common.js');
 const snsTopicArn = "arn:aws:sns:" + constants.awsRegion + ":" + privateConstants.awsId + ":message-topic";
 
 exports.handler = (event, context, callback) => {
@@ -10,15 +11,8 @@ exports.handler = (event, context, callback) => {
         return callback("Required parameter not provided", null);
     }
 
-    return dynamodb.getItem({
-        Key: {
-            "UserId": {
-               S: event.userId
-            }
-        },
-        TableName: constants.userTableName
-    }).promise()
-    .then(data => !(data.Item) ? callback("User does not exist", null) : {})
+    return common.userExists(event.userId)
+    .then(exists => exists ? {} : callback("User does not exist", null))
 
     .then(() => sns.publish({
             Message: event.userId + ": " + event.message,

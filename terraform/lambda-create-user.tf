@@ -1,7 +1,7 @@
 resource "aws_lambda_function" "lambda_create_user_function" {
   filename = "../node/lambda.zip"
   function_name = "CreateUser"
-  handler = "createUser.handler"
+  handler = "lambda-createUser.handler"
   role = aws_iam_role.lambda_create_user_execution_role.arn
   runtime = "nodejs12.x"
 }
