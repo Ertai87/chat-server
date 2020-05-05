@@ -1,6 +1,7 @@
-- Debug 500 server error issue in API Gateway
-- Receive messages by user ID
+- API Gateway for retrieve messages
+- Refactor retrieve messages lambda into a better way (current way works but is hacky)
 - Implement separate chat rooms
 - Implement moving between chat rooms
+- Debug 500 server error issue in API Gateway
 - Research if it is possible to implement inactive timeout
 - Research Socket.io for push notifications to client
