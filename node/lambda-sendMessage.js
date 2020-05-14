@@ -8,11 +8,11 @@ const snsTopicArn = "arn:aws:sns:" + constants.awsRegion + ":" + privateConstant
 
 exports.handler = (event, context, callback) => {
     if (!(event.userId) || !(event.message)) {
-        return callback("Required parameter not provided", null);
+        return callback(common.errorMessage("400", "Required parameter not provided"), null);
     }
 
     return common.userExists(event.userId)
-    .then(exists => exists ? {} : callback("User does not exist", null))
+    .then(exists => exists ? {} : callback(common.errorMessage("400","User does not exist"), null))
 
     .then(() => sns.publish({
             Message: event.userId + ": " + event.message,
@@ -25,5 +25,5 @@ exports.handler = (event, context, callback) => {
         statusCode: 200,
         body: ''
     }))
-    .catch(err => console.log("Error: " + err));
+    .catch(err => common.handleServiceError(err, callback));
 }

@@ -11,11 +11,11 @@ var sqsData = {};
 
 exports.handler = (event, context, callback) => {
     if (!(event.userId)) {
-        return callback("UserID not provided", null);
+        return callback(common.errorMessage("400", "UserID not provided"), null);
     }
 
     return common.userExists(event.userId)
-    .then(exists => exists ? callback("User already exists", null) : {})
+    .then(exists => exists ? callback(common.errorMessage("400", "User already exists"), null) : {})
 
     .then(() => createSqsQueuePromise(event.userId))
     .then(() => subscribeQueueToSnsPromise(sqsData.QueueUrl, sqsData.QueueArn))
@@ -25,10 +25,7 @@ exports.handler = (event, context, callback) => {
         statusCode: 200,
         body: ''
     }))
-    .catch(err => {
-        console.log("Error: " + err);
-        return callback(err, null);
-    });
+    .catch(err => common.handleServiceError(err, callback));
 }
 
 const putDynamoDbPromise = (userId, queueUrl, subscriptionArn) => {

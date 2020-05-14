@@ -7,11 +7,11 @@ const common = require('./common.js');
 
 exports.handler = (event, context, callback) => {
     if (!(event.userId)) {
-        return callback("UserID not provided", null);
+        return callback(common.errorMessage("400", "UserID not provided"), null);
     }
 
     return common.userExists(event.userId)
-    .then(data => data ? data : callback("User does not exist", null))
+    .then(data => data ? data : callback(common.errorMessage("400", "User does not exist"), null))
     .then(data => {
         let sqsPromise = deleteQueuePromise(data.QueueUrl.S);
         let snsPromise = deleteSubscriptionPromise(data.SubscriptionArn.S);
@@ -23,10 +23,7 @@ exports.handler = (event, context, callback) => {
         statusCode: 200,
         body: ''
     }))
-    .catch(err => {
-        console.log("Error: " + err);
-        return callback(err, null);
-    });
+    .catch(err => common.handleServiceError(err, callback));
 }
 
 const deleteQueuePromise = (queueUrl) => {

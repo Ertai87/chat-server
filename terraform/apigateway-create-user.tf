@@ -56,3 +56,102 @@ resource "aws_api_gateway_model" "create_user_request_model" {
 }
 EOF
 }
+
+resource "aws_api_gateway_method_response" "create_user_response_200" {
+  rest_api_id = aws_api_gateway_rest_api.create_user_api.id
+  resource_id = aws_api_gateway_resource.create_user_publish_resource.id
+  http_method = aws_api_gateway_method.create_user_publish_method.http_method
+  status_code = "200"
+}
+
+resource "aws_api_gateway_method_response" "create_user_response_400" {
+  rest_api_id = aws_api_gateway_rest_api.create_user_api.id
+  resource_id = aws_api_gateway_resource.create_user_publish_resource.id
+  http_method = aws_api_gateway_method.create_user_publish_method.http_method
+  status_code = "400"
+}
+
+resource "aws_api_gateway_method_response" "create_user_response_500" {
+  rest_api_id = aws_api_gateway_rest_api.create_user_api.id
+  resource_id = aws_api_gateway_resource.create_user_publish_resource.id
+  http_method = aws_api_gateway_method.create_user_publish_method.http_method
+  status_code = "500"
+}
+
+resource "aws_api_gateway_method_response" "create_user_response_504" {
+  rest_api_id = aws_api_gateway_rest_api.create_user_api.id
+  resource_id = aws_api_gateway_resource.create_user_publish_resource.id
+  http_method = aws_api_gateway_method.create_user_publish_method.http_method
+  status_code = "504"
+}
+
+resource "aws_api_gateway_integration_response" "create_user_integration_response_200" {
+  rest_api_id = aws_api_gateway_rest_api.create_user_api.id
+  resource_id = aws_api_gateway_resource.create_user_publish_resource.id
+  http_method = aws_api_gateway_method.create_user_publish_method.http_method
+  status_code = aws_api_gateway_method_response.create_user_response_200.status_code
+
+  response_templates = {
+    "application/json" = <<EOF
+#set($inputRoot = $input.path('$'))
+{
+  "status":"200",
+  "message":"OK"
+}
+EOF
+  }
+}
+
+resource "aws_api_gateway_integration_response" "create_user_integration_response_400" {
+  rest_api_id = aws_api_gateway_rest_api.create_user_api.id
+  resource_id = aws_api_gateway_resource.create_user_publish_resource.id
+  http_method = aws_api_gateway_method.create_user_publish_method.http_method
+  status_code = aws_api_gateway_method_response.create_user_response_400.status_code
+  selection_pattern = "Bad Request.*"
+
+  response_templates = {
+    "application/json" = <<EOF
+#set($inputRoot = $input.path('$'))
+{
+  "status":"400",
+  "message":"$inputRoot.errorMessage"
+}
+EOF
+  }
+}
+
+resource "aws_api_gateway_integration_response" "create_user_integration_response_500" {
+  rest_api_id = aws_api_gateway_rest_api.create_user_api.id
+  resource_id = aws_api_gateway_resource.create_user_publish_resource.id
+  http_method = aws_api_gateway_method.create_user_publish_method.http_method
+  status_code = aws_api_gateway_method_response.create_user_response_500.status_code
+  selection_pattern = "Server Error.*"
+
+  response_templates = {
+    "application/json" = <<EOF
+#set($inputRoot = $input.path('$'))
+{
+  "status":"500",
+  "message":"$inputRoot.errorMessage"
+}
+EOF
+  }
+}
+
+resource "aws_api_gateway_integration_response" "create_user_integration_response_timeout" {
+  rest_api_id = aws_api_gateway_rest_api.create_user_api.id
+  resource_id = aws_api_gateway_resource.create_user_publish_resource.id
+  http_method = aws_api_gateway_method.create_user_publish_method.http_method
+  status_code = aws_api_gateway_method_response.create_user_response_504.status_code
+  selection_pattern = ".*Task timed out.*"
+
+  response_templates = {
+    "application/json" = <<EOF
+#set($inputRoot = $input.path('$'))
+{
+  "status":"504",
+  "message":"$inputRoot.errorMessage"
+}
+EOF
+  }
+}
