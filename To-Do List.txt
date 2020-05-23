@@ -1,5 +1,7 @@
-- Refactor Lambda + API Gateway into module, code is too large to keep copypasting
-- Implement separate chat rooms
-- Implement moving between chat rooms
-- Research if it is possible to implement inactive timeout
+- Refactor code to use async/await instead of Promise chains
+-   Move chat log onto S3 per chatroom
+    SNS notification/SQS queue per chatroom
+    Users read chat log from S3
+- Create Chatroom API
+- Move User To Chatroom API
 - Research Socket.io for push notifications to client

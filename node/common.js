@@ -3,15 +3,16 @@ const dynamodb = new AWS.DynamoDB();
 const constants = require('./constants.js');
 
 exports.userExists = (userId) => {
-    return dynamodb.getItem({
-        Key: {
-            "UserId": {
+    return dynamodb.query({
+        ExpressionAttributeValues: {
+        ":userId": {
                 S: userId
             }
         },
+        KeyConditionExpression: "UserId = :userId", 
         TableName: constants.userTableName
     }).promise()
-    .then(data => data.Item);
+    .then(data => data.Items[0]);
 }
 
 exports.errorMessage = (code, text) => {

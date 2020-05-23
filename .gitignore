@@ -3,4 +3,5 @@ node/privateConstants.js
 node/*.zip
 terraform/.terraform
 terraform/*.tfstate*
+terraform/*.sh
 .idea/
