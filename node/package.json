@@ -18,6 +18,6 @@
   },
   "homepage": "https://github.com/ertai87/chat-server#readme",
   "dependencies": {
-    "aws-sdk": "^2.660.0"
+    "aws-sdk": "^2.814.0"
   }
 }
